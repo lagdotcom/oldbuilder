@@ -97,6 +97,11 @@ const wildcardSets = [
   "por",
   "p02",
   "ptk",
+  "phpr",
+  "5ed",
+  "6ed",
+  "7ed",
+  "dkm",
 ];
 const wildcard: Category = {
   name: "Wildcard Highlander",
