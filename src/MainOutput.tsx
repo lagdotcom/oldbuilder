@@ -10,6 +10,19 @@ import StatsOutput from "./StatsOutput";
 
 const allCards = cardsDb as unknown as Card[];
 
+const basicLands = [
+  "Plains",
+  "Island",
+  "Swamp",
+  "Mountain",
+  "Forest",
+  "Snow-Covered Plains",
+  "Snow-Covered Island",
+  "Snow-Covered Swamp",
+  "Snow-Covered Mountain",
+  "Snow-Covered Forest",
+];
+
 function splitLine(line: string): [count: number, name: string] {
   const i = line.indexOf(" ");
   if (i === -1) return [1, line];
@@ -44,7 +57,11 @@ function parseCardsText(
           for (const cat of categories) {
             const m = matches[cat.name];
             if (cat.limit <= m.length) continue;
-            if (cat.highlander && m.filter((mc) => mc.card === c).length)
+            if (
+              cat.highlander &&
+              !basicLands.includes(c.name) &&
+              m.filter((mc) => mc.card === c).length
+            )
               continue;
 
             const result = cat.get(c);
