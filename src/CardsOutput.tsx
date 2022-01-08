@@ -91,6 +91,7 @@ const wildcardSets = [
   "wth",
   "tmp",
   "sth",
+  "exo",
   "usg",
   "ulg",
   "uds",
