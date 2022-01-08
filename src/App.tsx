@@ -5,7 +5,7 @@ import Box from "ui-box";
 
 import { Categorised } from "./Card";
 import CardsInput from "./CardsInput";
-import CardsOutput from "./CardsOutput";
+import MainOutput from "./MainOutput";
 
 export default function App() {
   const [text, setText] = useState("");
@@ -19,7 +19,7 @@ export default function App() {
   return (
     <Box display="flex" height="100vh">
       <CardsInput text={text} setText={setText} image={image} />
-      <CardsOutput text={text} onShow={onShow} />
+      <MainOutput text={text} onShow={onShow} />
     </Box>
   );
 }
