@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
-function App() {
+import { useCallback, useState } from "react";
+import Box from "ui-box";
+
+import { Categorised } from "./Card";
+import CardsInput from "./CardsInput";
+import CardsOutput from "./CardsOutput";
+
+export default function App() {
+  const [text, setText] = useState("");
+  const [image, setImage] = useState("");
+
+  const onShow = useCallback(
+    (c: Categorised) => setImage(c.card.sets[c.set][0]),
+    []
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box display="flex" height="100vh">
+      <CardsInput text={text} setText={setText} image={image} />
+      <CardsOutput text={text} onShow={onShow} />
+    </Box>
   );
 }
-
-export default App;
