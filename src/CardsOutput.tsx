@@ -20,8 +20,9 @@ function CategoryCards({
   );
 
   return (
-    <Box key={name} title={cat?.title}>
+    <Box key={name}>
       <Box
+        title={cat?.title}
         display="inline"
         fontWeight="bold"
         borderBottom={cat?.title && "1px dotted black"}
