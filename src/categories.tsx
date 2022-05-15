@@ -45,6 +45,7 @@ const ancientSets = [
 ];
 const ancient: Category = {
   name: "Ancient Sets",
+  title: "LEA/LEB/2ED/3ED/ARN/ATQ/LEG/DRK/CHR",
   limit: 10,
   get(card) {
     for (const set of ancientSets) {
@@ -88,6 +89,7 @@ const wildcardSets = [
 ];
 const wildcard: Category = {
   name: "Wildcard Highlander",
+  title: "Anything up to UDS",
   limit: 15,
   highlander: true,
   get(card) {

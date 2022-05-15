@@ -9,6 +9,7 @@ export default Card;
 
 export type Category = {
   name: string;
+  title?: string;
   limit: number;
   highlander?: boolean;
   get(card: Card): Categorised | undefined;

@@ -45,7 +45,7 @@ function parseCardsText(
     .split("\n")
     .filter((x) => x)
     .forEach((n) => {
-      const [count, name] = splitLine(n);
+      const [count, name] = splitLine(n.trim());
       if (!name || name.substring(0, 2) === "//") return;
 
       const results = filter(name, allCards, { extract: (c) => c.name });
