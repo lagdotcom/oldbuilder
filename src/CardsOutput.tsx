@@ -50,7 +50,8 @@ export default function CardsOutput({ matches, onShow, unmatched }: Props) {
       flexDirection="column"
       flexWrap="wrap"
       gap={8}
-      maxHeight="100%"
+      // TODO this is dumb
+      maxHeight="calc(100% - 29px)"
     >
       {Object.entries(matches).map(([name, cards]) => (
         <CategoryCards key={name} name={name} cards={cards} onShow={onShow} />
