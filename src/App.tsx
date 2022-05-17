@@ -1,9 +1,7 @@
-import "./App.css";
-
 import { useCallback, useState } from "react";
 import Box from "ui-box";
 
-import { Categorised } from "./Card";
+import Card from "./Card";
 import CardsInput from "./CardsInput";
 import MainOutput from "./MainOutput";
 
@@ -12,7 +10,7 @@ export default function App() {
   const [image, setImage] = useState("");
 
   const onShow = useCallback(
-    (c: Categorised) => setImage(c.card.sets[c.set][0]),
+    (card: Card, set: string) => setImage(card.sets[set][0]),
     []
   );
 

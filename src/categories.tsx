@@ -78,6 +78,7 @@ const wildcardSets = [
   "usg",
   "ulg",
   "uds",
+  "s99",
   "por",
   "p02",
   "ptk",

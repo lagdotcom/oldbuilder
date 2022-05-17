@@ -33,11 +33,37 @@ function splitLine(line: string): [count: number, name: string] {
   return [count, line.substring(i + 1)];
 }
 
-function parseCardsText(
-  text: string
-): [Record<string, Categorised[]>, string[]] {
+const bannedCards = [
+  // this is a preview from MMQ
+  "Crossbow Infantry",
+
+  // ante cards
+  "Amulet of Quoz",
+  "Bronze Tablet",
+  "Darkpact",
+  "Demonic Attorney",
+  "Jeweled Bird",
+  "Rebirth",
+  "Tempest Efreet",
+  "Timmerian Fiends",
+
+  // 'dexterity' cards
+  "Chaos Orb",
+  "Falling Star",
+];
+
+type CardParseResult = {
+  matches: Record<string, Categorised[]>;
+  outOfRoom: Card[];
+  banned: Card[];
+  unknown: string[];
+};
+
+function parseCardsText(text: string): CardParseResult {
   const matches: Record<string, Categorised[]> = {};
-  const unmatched: string[] = [];
+  const outOfRoom: Card[] = [];
+  const banned: Card[] = [];
+  const unknown: string[] = [];
 
   categories.forEach((cat) => (matches[cat.name] = []));
 
@@ -51,6 +77,11 @@ function parseCardsText(
       const results = filter(name, allCards, { extract: (c) => c.name });
       if (results.length) {
         const c = results[0].original;
+
+        if (bannedCards.includes(c.name)) {
+          banned.push(c);
+          return;
+        }
 
         for (let i = 0; i < count; i++) {
           let found: Categorised | undefined = undefined;
@@ -72,22 +103,31 @@ function parseCardsText(
           }
 
           if (found) matches[found.category.name].push(found);
-          else unmatched.push(`${c.name}: didn't fit anywhere`);
+          else outOfRoom.push(c);
         }
-      } else unmatched.push(`${n}: unknown card name`);
+      } else unknown.push(n);
     });
 
-  return [matches, unmatched];
+  return { matches, outOfRoom, banned, unknown };
 }
 
-type Props = { text: string; onShow(card: Categorised): void };
+type Props = { text: string; onShow(card: Card, set: string): void };
 export default function MainOutput({ onShow, text }: Props) {
-  const [matches, unmatched] = useMemo(() => parseCardsText(text), [text]);
+  const { matches, outOfRoom, banned, unknown } = useMemo(
+    () => parseCardsText(text),
+    [text]
+  );
 
   return (
     <Box flex={1} display="flex" flexDirection="column" height="100vh" gap={8}>
       <StatsOutput cards={Object.values(matches).flat()} />
-      <CardsOutput matches={matches} unmatched={unmatched} onShow={onShow} />
+      <CardsOutput
+        matches={matches}
+        outOfRoom={outOfRoom}
+        banned={banned}
+        unknown={unknown}
+        onShow={onShow}
+      />
     </Box>
   );
 }

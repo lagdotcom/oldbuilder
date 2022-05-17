@@ -1,11 +1,14 @@
 import { useCallback } from "react";
 import Box from "ui-box";
 
-import { Categorised } from "./Card";
+import Card, { Categorised } from "./Card";
 
-type Props = { card: Categorised; onShow(card: Categorised): void };
+type Props = { card: Categorised; onShow(card: Card, set: string): void };
 export default function CardInfo({ card, onShow }: Props) {
-  const onHover = useCallback(() => onShow(card), [card, onShow]);
+  const onHover = useCallback(
+    () => onShow(card.card, card.set),
+    [card, onShow]
+  );
 
   return (
     <Box display="flex" onMouseEnter={onHover}>

@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import Box from "ui-box";
 
-import { Categorised } from "./Card";
+import Card, { Categorised } from "./Card";
 import CardInfo from "./CardInfo";
 import categories from "./categories";
 
@@ -12,7 +12,7 @@ function CategoryCards({
 }: {
   cards: Categorised[];
   name: string;
-  onShow(card: Categorised): void;
+  onShow(card: Card, set: string): void;
 }) {
   const cat = useMemo(
     () => categories.find((cat) => cat.name === name),
@@ -37,12 +37,46 @@ function CategoryCards({
   );
 }
 
+function ErrorCategory({
+  cards,
+  label,
+  onShow,
+}: {
+  cards: Card[];
+  label: string;
+  onShow(card: Card, set: string): void;
+}) {
+  const hover = useCallback(
+    (card: Card) => () => onShow(card, Object.keys(card.sets)[0]),
+    [onShow]
+  );
+
+  return cards.length > 0 ? (
+    <Box>
+      <Box fontWeight="bold">{label}</Box>
+      {cards.map((card, n) => (
+        <Box key={n} onMouseOver={hover(card)}>
+          {card.name} ({Object.keys(card.sets).join(", ")})
+        </Box>
+      ))}
+    </Box>
+  ) : null;
+}
+
 type Props = {
   matches: Record<string, Categorised[]>;
-  onShow(card: Categorised): void;
-  unmatched: string[];
+  outOfRoom: Card[];
+  banned: Card[];
+  unknown: string[];
+  onShow(card: Card, set: string): void;
 };
-export default function CardsOutput({ matches, onShow, unmatched }: Props) {
+export default function CardsOutput({
+  matches,
+  outOfRoom,
+  banned,
+  unknown,
+  onShow,
+}: Props) {
   return (
     <Box
       flex={1}
@@ -57,10 +91,13 @@ export default function CardsOutput({ matches, onShow, unmatched }: Props) {
         <CategoryCards key={name} name={name} cards={cards} onShow={onShow} />
       ))}
 
-      {unmatched.length > 0 && (
+      <ErrorCategory label="Out of Room" cards={outOfRoom} onShow={onShow} />
+      <ErrorCategory label="Banned" cards={banned} onShow={onShow} />
+
+      {unknown.length > 0 && (
         <Box>
-          <Box fontWeight="bold">Errors</Box>
-          {unmatched.map((name, n) => (
+          <Box fontWeight="bold">Unknown Cards</Box>
+          {unknown.map((name, n) => (
             <Box key={n}>{name}</Box>
           ))}
         </Box>
