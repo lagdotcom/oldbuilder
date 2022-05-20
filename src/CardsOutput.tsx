@@ -20,7 +20,7 @@ function CategoryCards({
   );
 
   return (
-    <Box key={name}>
+    <Box>
       <Box
         title={cat?.title}
         display="inline"
@@ -37,6 +37,8 @@ function CategoryCards({
   );
 }
 
+const errorColour = "#fdd";
+
 function ErrorCategory({
   cards,
   label,
@@ -52,7 +54,7 @@ function ErrorCategory({
   );
 
   return cards.length > 0 ? (
-    <Box>
+    <Box backgroundColor={errorColour}>
       <Box fontWeight="bold">{label}</Box>
       {cards.map((card, n) => (
         <Box key={n} onMouseOver={hover(card)}>
@@ -84,8 +86,7 @@ export default function CardsOutput({
       flexDirection="column"
       flexWrap="wrap"
       gap={8}
-      // TODO this is dumb
-      maxHeight="calc(100% - 29px)"
+      minHeight={0}
     >
       {Object.entries(matches).map(([name, cards]) => (
         <CategoryCards key={name} name={name} cards={cards} onShow={onShow} />
@@ -95,7 +96,7 @@ export default function CardsOutput({
       <ErrorCategory label="Banned" cards={banned} onShow={onShow} />
 
       {unknown.length > 0 && (
-        <Box>
+        <Box backgroundColor={errorColour}>
           <Box fontWeight="bold">Unknown Cards</Box>
           {unknown.map((name, n) => (
             <Box key={n}>{name}</Box>

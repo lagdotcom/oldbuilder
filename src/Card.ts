@@ -1,5 +1,6 @@
 type Card = {
   name: string;
+  type: string;
   colour: string[];
   mana?: string;
   produced_mana?: string[];

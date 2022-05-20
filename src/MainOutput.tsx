@@ -3,25 +3,10 @@ import { useMemo } from "react";
 import Box from "ui-box";
 
 import Card, { Categorised } from "./Card";
-import cardsDb from "./cards.json";
+import { allCards, basicLands } from "./cards";
 import CardsOutput from "./CardsOutput";
 import categories from "./categories";
 import StatsOutput from "./StatsOutput";
-
-const allCards = cardsDb as unknown as Card[];
-
-const basicLands = [
-  "Plains",
-  "Island",
-  "Swamp",
-  "Mountain",
-  "Forest",
-  "Snow-Covered Plains",
-  "Snow-Covered Island",
-  "Snow-Covered Swamp",
-  "Snow-Covered Mountain",
-  "Snow-Covered Forest",
-];
 
 function splitLine(line: string): [count: number, name: string] {
   const i = line.indexOf(" ");
@@ -40,6 +25,7 @@ const bannedCards = [
   // ante cards
   "Amulet of Quoz",
   "Bronze Tablet",
+  "Contract from Below",
   "Darkpact",
   "Demonic Attorney",
   "Jeweled Bird",
