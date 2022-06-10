@@ -31,7 +31,7 @@ const ManaSymbol = memo(function ManaSymbol({
   );
 });
 
-const manaMatcher = /\{[0123456789WUBRG]+\}/g;
+const manaMatcher = /\{[0123456789WUBRGX]+\}/g;
 
 function getColour(sym: string): Colour {
   if (sym in colours) return sym as Colour;
