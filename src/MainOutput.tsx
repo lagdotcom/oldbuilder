@@ -38,26 +38,33 @@ const bannedCards = [
   "Falling Star",
 ];
 
+const restrictedCards = ["Black Vise", "Strip Mine"];
+
 type CardParseResult = {
+  count: number;
   matches: Record<string, Categorised[]>;
   outOfRoom: Card[];
   banned: Card[];
+  overflow: Card[];
   unknown: string[];
 };
 
 function parseCardsText(text: string): CardParseResult {
-  const matches: Record<string, Categorised[]> = {};
+  const counted: Record<string, number> = {};
+  const matches: Record<string, Categorised[]> = Object.fromEntries(
+    categories.map((cat) => [cat.name, []])
+  );
   const outOfRoom: Card[] = [];
   const banned: Card[] = [];
+  const overflow: Card[] = [];
   const unknown: string[] = [];
-
-  categories.forEach((cat) => (matches[cat.name] = []));
+  let count = 0;
 
   text
     .split("\n")
     .filter((x) => x)
     .forEach((n) => {
-      const [count, name] = splitLine(n.trim());
+      const [amount, name] = splitLine(n.trim());
       if (!name || name.substring(0, 2) === "//") return;
 
       const results = filter(name, allCards, { extract: (c) => c.name });
@@ -69,14 +76,27 @@ function parseCardsText(text: string): CardParseResult {
           return;
         }
 
-        for (let i = 0; i < count; i++) {
+        const isBasic = basicLands.includes(c.name);
+        const isRestricted = restrictedCards.includes(c.name);
+
+        for (let i = 0; i < amount; i++) {
+          count++;
+
+          let isOverflow = false;
           let found: Categorised | undefined = undefined;
           for (const cat of categories) {
             const m = matches[cat.name];
+
+            const limit = isRestricted ? 1 : isBasic ? Infinity : 4;
+            if ((counted[c.name] || 0) + 1 > limit) {
+              isOverflow = true;
+              continue;
+            }
             if (cat.limit <= m.length) continue;
+
             if (
               cat.highlander &&
-              !basicLands.includes(c.name) &&
+              !isBasic &&
               m.filter((mc) => mc.card === c).length
             )
               continue;
@@ -88,29 +108,34 @@ function parseCardsText(text: string): CardParseResult {
             }
           }
 
-          if (found) matches[found.category.name].push(found);
-          else outOfRoom.push(c);
+          if (found) {
+            matches[found.category.name].push(found);
+            counted[c.name] = (counted[c.name] || 0) + 1;
+          } else if (isOverflow) {
+            overflow.push(c);
+          } else outOfRoom.push(c);
         }
       } else unknown.push(n);
     });
 
-  return { matches, outOfRoom, banned, unknown };
+  return { count, matches, outOfRoom, banned, overflow, unknown };
 }
 
 type Props = { text: string; onShow(card: Card, set: string): void };
 export default function MainOutput({ onShow, text }: Props) {
-  const { matches, outOfRoom, banned, unknown } = useMemo(
+  const { count, matches, outOfRoom, banned, overflow, unknown } = useMemo(
     () => parseCardsText(text),
     [text]
   );
 
   return (
     <Box flex={1} display="flex" flexDirection="column" height="100vh" gap={8}>
-      <StatsOutput cards={Object.values(matches).flat()} />
+      <StatsOutput count={count} cards={Object.values(matches).flat()} />
       <CardsOutput
         matches={matches}
         outOfRoom={outOfRoom}
         banned={banned}
+        overflow={overflow}
         unknown={unknown}
         onShow={onShow}
       />

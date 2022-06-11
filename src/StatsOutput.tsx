@@ -4,8 +4,6 @@ import Box from "ui-box";
 import { Categorised } from "./Card";
 import Colour, { colours } from "./Colour";
 
-type Props = { cards: Categorised[] };
-
 function strCount(haystack: string, needle: string) {
   let i = 0;
   let c = 0;
@@ -42,7 +40,7 @@ function getCostCount(cards: Categorised[], mana: string) {
     .map((c) => strCount(c.card.mana || "", mana))
     .reduce((a, b) => a + b, 0);
 }
-function CostsOutput({ cards }: Props) {
+function CostsOutput({ cards }: { cards: Categorised[] }) {
   const w = useMemo(() => getCostCount(cards, "{W}"), [cards]);
   const u = useMemo(() => getCostCount(cards, "{U}"), [cards]);
   const b = useMemo(() => getCostCount(cards, "{B}"), [cards]);
@@ -65,7 +63,7 @@ function CostsOutput({ cards }: Props) {
 function getSourceCount(cards: Categorised[], mana: string) {
   return cards.filter((c) => c.card.produced_mana?.includes(mana)).length;
 }
-function SourcesOutput({ cards }: Props) {
+function SourcesOutput({ cards }: { cards: Categorised[] }) {
   const w = useMemo(() => getSourceCount(cards, "W"), [cards]);
   const u = useMemo(() => getSourceCount(cards, "U"), [cards]);
   const b = useMemo(() => getSourceCount(cards, "B"), [cards]);
@@ -87,12 +85,14 @@ function SourcesOutput({ cards }: Props) {
   );
 }
 
-export default function StatsOutput({ cards }: Props) {
+type Props = { cards: Categorised[]; count: number };
+
+export default function StatsOutput({ cards, count }: Props) {
   return (
     <Box display="flex" justifyContent="space-between" gap={8}>
       <Box display="flex" gap={4}>
         <Box fontWeight="bold">size</Box>
-        <Box>{cards.length}/60</Box>
+        <Box>{count}/60</Box>
       </Box>
       <CostsOutput cards={cards} />
       <SourcesOutput cards={cards} />

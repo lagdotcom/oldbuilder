@@ -69,6 +69,7 @@ type Props = {
   matches: Record<string, Categorised[]>;
   outOfRoom: Card[];
   banned: Card[];
+  overflow: Card[];
   unknown: string[];
   onShow(card: Card, set: string): void;
 };
@@ -76,6 +77,7 @@ export default function CardsOutput({
   matches,
   outOfRoom,
   banned,
+  overflow,
   unknown,
   onShow,
 }: Props) {
@@ -94,6 +96,7 @@ export default function CardsOutput({
 
       <ErrorCategory label="Out of Room" cards={outOfRoom} onShow={onShow} />
       <ErrorCategory label="Banned" cards={banned} onShow={onShow} />
+      <ErrorCategory label="Too Many" cards={overflow} onShow={onShow} />
 
       {unknown.length > 0 && (
         <Box backgroundColor={errorColour}>
