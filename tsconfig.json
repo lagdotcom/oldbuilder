@@ -16,13 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "ES2017"
-    }
-  },
-
   "include": ["src"]
 }
