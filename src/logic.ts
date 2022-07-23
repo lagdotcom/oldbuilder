@@ -48,6 +48,7 @@ const restrictedCards = [
 
   // complete bullshit
   "Balance",
+  "Berserk",
   "Black Vise",
   "Channel",
   "Fastbond",

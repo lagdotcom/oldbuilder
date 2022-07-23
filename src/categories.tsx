@@ -42,10 +42,11 @@ const ancientSets = [
   "leg",
   "drk",
   "chr",
+  "phpr",
 ];
 const ancient: Category = {
   name: "Ancient Sets",
-  title: "LEA/LEB/2ED/3ED/ARN/ATQ/LEG/DRK/CHR",
+  title: "LEA/LEB/2ED/3ED/ARN/ATQ/LEG/DRK/CHR/PHPR",
   limit: 10,
   get(card) {
     for (const set of ancientSets) {
@@ -82,7 +83,6 @@ const wildcardSets = [
   "por",
   "p02",
   "ptk",
-  "phpr",
   "5ed",
   "6ed",
   "7ed",
