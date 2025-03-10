@@ -16,7 +16,7 @@ function CategoryCards({
 }) {
   const cat = useMemo(
     () => categories.find((cat) => cat.name === name),
-    [name]
+    [name],
   );
 
   return (
@@ -50,7 +50,7 @@ function ErrorCategory({
 }) {
   const hover = useCallback(
     (card: Card) => () => onShow(card, Object.keys(card.sets)[0]),
-    [onShow]
+    [onShow],
   );
 
   return cards.length > 0 ? (
@@ -65,14 +65,14 @@ function ErrorCategory({
   ) : null;
 }
 
-type Props = {
+interface Props {
   matches: Record<string, Categorised[]>;
   outOfRoom: Card[];
   banned: Card[];
   overflow: Card[];
   unknown: string[];
   onShow(card: Card, set: string): void;
-};
+}
 export default function CardsOutput({
   matches,
   outOfRoom,

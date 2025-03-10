@@ -6,11 +6,14 @@ import CardsOutput from "./CardsOutput";
 import { parseCardsText } from "./logic";
 import StatsOutput from "./StatsOutput";
 
-type Props = { text: string; onShow(card: Card, set: string): void };
+interface Props {
+  text: string;
+  onShow(card: Card, set: string): void;
+}
 export default function MainOutput({ onShow, text }: Props) {
   const { count, matches, outOfRoom, banned, overflow, unknown } = useMemo(
     () => parseCardsText(text),
-    [text]
+    [text],
   );
 
   return (

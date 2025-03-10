@@ -50,11 +50,14 @@ const CardMana = memo(function CardMana({ mana }: { mana?: string }) {
   );
 });
 
-type Props = { card: Categorised; onShow(card: Card, set: string): void };
+interface Props {
+  card: Categorised;
+  onShow(card: Card, set: string): void;
+}
 const CardInfo = memo(function CardInfo({ card, onShow }: Props) {
   const onHover = useCallback(
     () => onShow(card.card, card.set),
-    [card, onShow]
+    [card, onShow],
   );
 
   return (

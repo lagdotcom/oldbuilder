@@ -27,7 +27,7 @@ function ColourOutput({
 }) {
   const percentage = useMemo(
     () => (total ? (value * 100) / total : 0),
-    [total, value]
+    [total, value],
   );
   return (
     <Box backgroundColor={colours[colour]} paddingX={2}>
@@ -85,7 +85,10 @@ function SourcesOutput({ cards }: { cards: Categorised[] }) {
   );
 }
 
-type Props = { cards: Categorised[]; count: number };
+interface Props {
+  cards: Categorised[];
+  count: number;
+}
 
 export default function StatsOutput({ cards, count }: Props) {
   return (

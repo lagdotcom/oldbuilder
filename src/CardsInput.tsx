@@ -1,12 +1,16 @@
 import { ChangeEvent, useCallback } from "react";
 import Box from "ui-box";
 
-type Props = { image?: string; text: string; setText(text: string): void };
+interface Props {
+  image?: string;
+  text: string;
+  setText(text: string): void;
+}
 
 export default function CardsInput({ image, text, setText }: Props) {
   const onChange = useCallback(
     (e: ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value),
-    [setText]
+    [setText],
   );
 
   return (

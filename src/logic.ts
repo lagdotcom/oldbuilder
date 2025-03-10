@@ -71,19 +71,19 @@ const restrictedCards = [
   "Force of Will",
 ];
 
-export type CardParseResult = {
+export interface CardParseResult {
   count: number;
   matches: Record<string, Categorised[]>;
   outOfRoom: Card[];
   banned: Card[];
   overflow: Card[];
   unknown: string[];
-};
+}
 
 export function parseCardsText(text: string): CardParseResult {
   const counted: Record<string, number> = {};
   const matches: Record<string, Categorised[]> = Object.fromEntries(
-    categories.map((cat) => [cat.name, []])
+    categories.map((cat) => [cat.name, []]),
   );
   const outOfRoom: Card[] = [];
   const banned: Card[] = [];

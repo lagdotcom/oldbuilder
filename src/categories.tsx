@@ -1,36 +1,35 @@
 import { Category } from "./Card";
 
-const fourth: Category = {
-  name: "4th Edition",
-  limit: 10,
+const makeCategory = (
+  name: string,
+  limit: number,
+  sets: string[],
+  {
+    basics = false,
+    highlander,
+    title,
+  }: { basics?: boolean; highlander?: boolean; title?: string } = {},
+): Category => ({
+  name,
+  title,
+  limit,
+  highlander,
   get(card) {
-    if (card.sets["4ed"]) return { category: fourth, set: "4ed", card };
+    if (card.type.startsWith("Basic Land") && !basics) return;
+
+    for (const set of sets)
+      if (card.sets[set]) return { category: this, set, card };
   },
-};
-const mirage: Category = {
-  name: "Mirage/Visions",
-  limit: 10,
-  get(card) {
-    if (card.sets["mir"]) return { category: mirage, set: "mir", card };
-    if (card.sets["vis"]) return { category: mirage, set: "vis", card };
-  },
-};
-const ice: Category = {
-  name: "Ice Age/Alliances",
-  limit: 10,
-  get(card) {
-    if (card.sets["ice"]) return { category: ice, set: "ice", card };
-    if (card.sets["all"]) return { category: ice, set: "all", card };
-  },
-};
-const fallen: Category = {
-  name: "Fallen Empires/Homelands",
-  limit: 5,
-  get(card) {
-    if (card.sets["fem"]) return { category: fallen, set: "fem", card };
-    if (card.sets["hml"]) return { category: fallen, set: "hml", card };
-  },
-};
+});
+
+const fourthSets = ["4ed"];
+const fourth = makeCategory("Fourth Edition", 5, fourthSets);
+
+const iceAgeSets = ["ice", "all"];
+const iceAge = makeCategory("Ice Age Block", 5, iceAgeSets);
+
+const mirageSets = ["mir", "vis", "wth"];
+const mirage = makeCategory("Mirage Block", 5, mirageSets);
 
 const ancientSets = [
   "lea",
@@ -44,35 +43,29 @@ const ancientSets = [
   "chr",
   "phpr",
 ];
-const ancient: Category = {
-  name: "Ancient Sets",
-  title: "LEA/LEB/2ED/3ED/ARN/ATQ/LEG/DRK/CHR/PHPR",
-  limit: 10,
-  get(card) {
-    for (const set of ancientSets) {
-      if (card.sets[set]) return { category: ancient, set, card };
-    }
-  },
-};
+const ancient = makeCategory("Ancient Sets", 5, ancientSets);
+
+const fallenEmpireSets = ["fem", "hml"];
+const fallenEmpire = makeCategory(
+  "Fallen Empires / Homelands",
+  5,
+  fallenEmpireSets,
+);
+
+const normalSets = [
+  ...fourthSets,
+  ...iceAgeSets,
+  ...mirageSets,
+  ...ancientSets,
+  ...fallenEmpireSets,
+];
+const normal = makeCategory("Any of the Above", 20, normalSets, {
+  basics: true,
+  title: "basics allowed",
+});
 
 const wildcardSets = [
-  "4ed",
-  "ice",
-  "all",
-  "fem",
-  "hml",
-  "mir",
-  "vis",
-  "lea",
-  "leb",
-  "2ed",
-  "3ed",
-  "arn",
-  "atq",
-  "leg",
-  "drk",
-  "chr",
-  "wth",
+  ...normalSets,
   "tmp",
   "sth",
   "exo",
@@ -88,17 +81,19 @@ const wildcardSets = [
   "7ed",
   "dkm",
 ];
-const wildcard: Category = {
-  name: "Wildcard Highlander",
-  title: "Anything up to UDS",
-  limit: 15,
+const wildcard = makeCategory("Wildcard Highlander", 15, wildcardSets, {
+  basics: true,
   highlander: true,
-  get(card) {
-    for (const set of wildcardSets) {
-      if (card.sets[set]) return { category: wildcard, set, card };
-    }
-  },
-};
+  title: "Anything up to PTK/UDS, basics allowed",
+});
 
-const categories = [fourth, ice, fallen, mirage, ancient, wildcard];
+const categories = [
+  fourth,
+  iceAge,
+  mirage,
+  ancient,
+  fallenEmpire,
+  normal,
+  wildcard,
+];
 export default categories;

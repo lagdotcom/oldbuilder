@@ -11,7 +11,7 @@ export default function App() {
 
   const onShow = useCallback(
     (card: Card, set: string) => setImage(card.sets[set][0]),
-    []
+    [],
   );
 
   return (
