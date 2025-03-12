@@ -1,4 +1,5 @@
 import { Category } from "./Card";
+import { basicLands } from "./cards";
 
 const makeCategory = (
   name: string,
@@ -15,7 +16,7 @@ const makeCategory = (
   limit,
   highlander,
   get(card) {
-    if (card.type.startsWith("Basic Land") && !basics) return;
+    if (basicLands.includes(card.name) && !basics) return;
 
     for (const set of sets)
       if (card.sets[set]) return { category: this, set, card };

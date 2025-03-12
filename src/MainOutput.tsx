@@ -11,10 +11,8 @@ interface Props {
   onShow(card: Card, set: string): void;
 }
 export default function MainOutput({ onShow, text }: Props) {
-  const { count, matches, outOfRoom, banned, overflow, unknown } = useMemo(
-    () => parseCardsText(text),
-    [text],
-  );
+  const { count, matches, outOfRoom, banned, overflow, unknown, errors } =
+    useMemo(() => parseCardsText(text), [text]);
 
   return (
     <Box flex={1} display="flex" flexDirection="column" height="100vh" gap={8}>
@@ -25,6 +23,7 @@ export default function MainOutput({ onShow, text }: Props) {
         banned={banned}
         overflow={overflow}
         unknown={unknown}
+        errors={errors}
         onShow={onShow}
       />
     </Box>

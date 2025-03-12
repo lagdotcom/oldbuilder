@@ -71,6 +71,7 @@ interface Props {
   banned: Card[];
   overflow: Card[];
   unknown: string[];
+  errors: string[];
   onShow(card: Card, set: string): void;
 }
 export default function CardsOutput({
@@ -79,6 +80,7 @@ export default function CardsOutput({
   banned,
   overflow,
   unknown,
+  errors,
   onShow,
 }: Props) {
   return (
@@ -102,6 +104,15 @@ export default function CardsOutput({
         <Box backgroundColor={errorColour}>
           <Box fontWeight="bold">Unknown Cards</Box>
           {unknown.map((name, n) => (
+            <Box key={n}>{name}</Box>
+          ))}
+        </Box>
+      )}
+
+      {errors.length > 0 && (
+        <Box backgroundColor={errorColour}>
+          <Box fontWeight="bold">Errors</Box>
+          {errors.map((name, n) => (
             <Box key={n}>{name}</Box>
           ))}
         </Box>

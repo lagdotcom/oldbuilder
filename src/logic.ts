@@ -1,7 +1,13 @@
 import { filter } from "fuzzy";
 
 import Card, { Categorised } from "./Card";
-import { allCards, basicLands } from "./cards";
+import {
+  allCards,
+  bannedCards,
+  basicLands,
+  expandedVanillaCreatures,
+  restrictedCards,
+} from "./cards";
 import categories from "./categories";
 
 function splitLine(line: string): [count: number, name: string] {
@@ -14,63 +20,6 @@ function splitLine(line: string): [count: number, name: string] {
   return [count, line.substring(i + 1)];
 }
 
-const bannedCards = [
-  // this is a preview from MMQ
-  "Crossbow Infantry",
-
-  // ante cards
-  "Amulet of Quoz",
-  "Bronze Tablet",
-  "Contract from Below",
-  "Darkpact",
-  "Demonic Attorney",
-  "Jeweled Bird",
-  "Rebirth",
-  "Tempest Efreet",
-  "Timmerian Fiends",
-
-  // 'dexterity' cards
-  "Chaos Orb",
-  "Falling Star",
-];
-
-const restrictedCards = [
-  // power 9
-  "Ancestral Recall",
-  "Black Lotus",
-  "Mox Emerald",
-  "Mox Jet",
-  "Mox Pearl",
-  "Mox Ruby",
-  "Mox Sapphire",
-  "Time Walk",
-  "Timetwister",
-
-  // complete bullshit
-  "Balance",
-  "Berserk",
-  "Black Vise",
-  "Channel",
-  "Fastbond",
-  "Library of Alexandria",
-  "Necropotence",
-  "Sol Ring",
-  "Strip Mine",
-
-  // tutors
-  "Demonic Consultation",
-  "Demonic Tutor",
-  "Enlightened Tutor",
-  "Merchant Scroll",
-  "Mystical Tutor",
-  "Vampiric Tutor",
-  "Worldly Tutor",
-
-  // we are not Legacy
-  "Dark Ritual",
-  "Force of Will",
-];
-
 export interface CardParseResult {
   count: number;
   matches: Record<string, Categorised[]>;
@@ -78,6 +27,7 @@ export interface CardParseResult {
   banned: Card[];
   overflow: Card[];
   unknown: string[];
+  errors: string[];
 }
 
 export function parseCardsText(text: string): CardParseResult {
@@ -89,6 +39,7 @@ export function parseCardsText(text: string): CardParseResult {
   const banned: Card[] = [];
   const overflow: Card[] = [];
   const unknown: string[] = [];
+  const errors: string[] = [];
   let count = 0;
 
   text
@@ -149,5 +100,17 @@ export function parseCardsText(text: string): CardParseResult {
       } else unknown.push(n);
     });
 
-  return { count, matches, outOfRoom, banned, overflow, unknown };
+  let found = false;
+  for (const [name, amount] of Object.entries(counted)) {
+    if (expandedVanillaCreatures.includes(name) && amount >= 4) {
+      found = true;
+      break;
+    }
+  }
+  if (!found)
+    errors.push(
+      "You must have at least 4 copies of a vanilla creature in your deck.",
+    );
+
+  return { count, matches, outOfRoom, banned, overflow, unknown, errors };
 }
